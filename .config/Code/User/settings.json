@@ -1,0 +1,44 @@
+{
+    "extensions.ignoreRecommendations": true,
+    "explorer.confirmDelete": false,
+    "jupyter.askForKernelRestart": false,
+    "python.terminal.executeInFileDir": true,
+    "git.openRepositoryInParentFolders": "never",
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?_",
+    "python.createEnvironment.trigger": "off",
+    "explorer.confirmDragAndDrop": false,
+    "explorer.autoReveal": false,
+    "terminal.integrated.enableMultiLinePasteWarning": false,
+    "remote.SSH.enableRemoteCommand": true,
+    "git.enableSmartCommit": true,
+    "editor.stickyScroll.enabled": false,
+    "workbench.startupEditor": "none",
+    "update.showReleaseNotes": false,
+    "explorer.confirmPasteNative": false,
+
+    "vim.easymotion": true,
+    "vim.incsearch": true,
+    "vim.useSystemClipboard": true,
+    "vim.useCtrlKeys": true,
+    "vim.hlsearch": true,
+    "vim.leader": "<space>",
+    "vim.handleKeys": {
+        "<C-a>": false,
+        "<C-f>": false,
+        "<C-w>": false,
+        "<C-Tab>": false,
+    },
+    "editor.lineNumbers": "relative",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": true,
+    "editor.autoIndent": "full",
+    "editor.wordWrap": "off", 
+    "extensions.experimental.affinity": {
+        "vscodevim.vim": 1,
+        "asvetliakov.vscode-neovim": 1
+    }
+
+}

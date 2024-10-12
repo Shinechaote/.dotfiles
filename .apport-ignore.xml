@@ -1,0 +1,4 @@
+<?xml version="1.0" ?>
+<apport>
+  <ignore program="/usr/share/discord/Discord" mtime="1701199049"/>
+</apport>

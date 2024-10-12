@@ -1,0 +1,12 @@
+[user]
+	email = felix.scherer@stud.tu-darmstadt.de
+	name = Christian Scherer
+[credential]
+	credentialStore = gpg
+	helper = store
+[init]
+	defaultBranch = main
+[fem]
+	dev = global dev
+[rerere]
+	enabled = true

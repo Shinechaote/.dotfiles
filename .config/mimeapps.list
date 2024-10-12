@@ -1,0 +1,24 @@
+[Default Applications]
+text/html=firefox_firefox.desktop
+x-scheme-handler/http=firefox_firefox.desktop
+x-scheme-handler/https=firefox_firefox.desktop
+x-scheme-handler/about=firefox_firefox.desktop
+x-scheme-handler/unknown=firefox_firefox.desktop
+text/plain=texmaker.desktop
+application/pdf=firefox.desktop
+text/csv=sublime_text.desktop
+text/x-python=code.desktop
+text/x-tex=texmaker.desktop
+x-scheme-handler/nc=com.nextcloud.desktopclient.nextcloud.desktop
+text/markdown=code.desktop
+
+[Added Associations]
+application/pdf=firefox.desktop;okularApplication_pdf.desktop;
+application/x-ipynb+json=code.desktop;
+text/plain=sublime_text.desktop;texmaker.desktop;
+text/csv=code.desktop;sublime_text.desktop;
+text/x-chdr=sublime_text.desktop;
+application/json=sublime_text.desktop;
+text/x-python=sublime_text.desktop;code.desktop;
+text/x-tex=texmaker.desktop;
+text/markdown=code.desktop;
