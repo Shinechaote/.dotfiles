@@ -1,0 +1,36 @@
+# tasks file for oh_my_zsh
+- name: Install Git
+  become: true
+  ansible.builtin.package:
+    state: present
+    name: git
+ 
+- name: Install ZSH
+  become: true
+  ansible.builtin.package:
+    name: zsh
+    state: present
+
+
+
+ # unzip is useful for extracting zips
+- name: Install unzip
+  become: true
+  ansible.builtin.package:
+    state: present
+    name: unzip
+- name: Install cmake
+  become: true
+  ansible.builtin.package:
+    state: present
+    name: cmake
+- name: Install curl
+  become: true
+  ansible.builtin.package:
+    state: present
+    name: curl
+- name: Install discord
+  become: true
+  ansible.builtin.package:
+    state: present
+    name: discord

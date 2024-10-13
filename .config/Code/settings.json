@@ -1,11 +1,11 @@
 {
-  "IS_MAXIMIZED": true,
+  "IS_MAXIMIZED": false,
   "IS_MINIMIZED": false,
   "WINDOW_BOUNDS": {
-    "x": 771,
-    "y": 254,
-    "width": 1097,
-    "height": 752
+    "x": 2,
+    "y": 18,
+    "width": 1916,
+    "height": 1041
   },
   "OPEN_ON_STARTUP": false,
   "SKIP_HOST_UPDATE": true
