@@ -4,3 +4,5 @@
 .thunderbird/zyrylmkp.default-release/datareporting
 .thunderbird/zyrylmkp.default-release/Mail
 .uuid
+*.sqlite
+.config/tmux/plugins
