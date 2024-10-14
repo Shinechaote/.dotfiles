@@ -13,6 +13,11 @@ set $mod Mod4
 exec --no-startup-id xset dpms 900 960 960 
 bindsym $mod+z exec --no-startup-id "slock && xset dpms 900 960 960 & xset dpms 5"
 
+# Background and Terminal Background
+exec_always --no-startup-id feh --bg-scale $HOME/dotfiles/tiny-wizard.png
+exec --no-startup-id redshift-gtk -l 50.1:08.6 -m randr -v
+
+
 # Colors
 set $wm_color_border_active_bg       #83B8C6
 set $wm_color_border_active_fg       #3B4252

@@ -3,6 +3,7 @@
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+setopt CORRECT
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
@@ -70,7 +71,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting command-not-found)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -102,3 +103,26 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+# export DET_MASTER=https://login01.ai.tu-darmstadt.de:8080/det
+
+alias openvideo="vlc v4l2:///dev/video0"
+
+alias vim=nvim
+alias python=python3
+move_and_symlink() {
+    if [ $# -ne 2 ]; then
+        echo "Usage: move_and_symlink <source> <destination>"
+        return 1
+    fi
+    
+    local src=$(realpath "$1")  # Get the absolute path of the source
+    local dest=$(realpath "$2") # Get the absolute path of the destination
+
+    # Move the source to the destination
+    mv "$src" "$dest"
+
+    # Create the symlink from destination back to the original source path
+    ln -s "$dest" "$src"
+
+}
+
