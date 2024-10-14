@@ -1,20 +1,21 @@
+require("chrfesche.remap")
 local builtin = require('telescope.builtin')
 
--- Function to find files with depth 1
-function find_files_depth_1()
+-- Function to find files with depth 2
+function find_files_depth_2()
   require('telescope.builtin').find_files({
-    find_command = { "fdfind", "--max-depth", "1" }
+    find_command = { "fdfind", "--max-depth", "2" }
   })
 end
 
-vim.keymap.set('n', '<C-t>', builtin.find_files, { desc = 'Telescope find files' })
-vim.keymap.set('n', '<leader>pf', builtin.git_files, { desc = 'Git find files' })
-vim.keymap.set('n', '<leader>ps', function()
+vim.keymap.set('n', keymaps.telescope_find_files, builtin.find_files, { desc = 'Telescope find files' })
+vim.keymap.set('n', keymaps.telescope_git_files, builtin.git_files, { desc = 'Git find files' })
+vim.keymap.set('n', keymaps.telescope_grep_string, function()
 	builtin.grep_string({ search = vim.fn.input("Grep >") });
 end)
 
 
-vim.api.nvim_set_keymap('n', '<C-p>', '<cmd>lua find_files_depth_1()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', keymaps.telescope_find_depth_2, '<cmd>lua find_files_depth_2()<CR>', { noremap = true, silent = true })
 require('telescope').setup {
   extensions = {
     fzf = {

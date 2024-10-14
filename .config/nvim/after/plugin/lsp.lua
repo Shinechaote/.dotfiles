@@ -1,18 +1,21 @@
+require("chrfesche.remap")
+
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('user_lsp_attach', {clear = true}),
   callback = function(event)
     local opts = {buffer = event.buf}
+    
 
-    vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end, opts)
-    vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, opts)
-    vim.keymap.set('n', '<leader>vws', function() vim.lsp.buf.workspace_symbol() end, opts)
-    vim.keymap.set('n', '<leader>vd', function() vim.diagnostic.open_float() end, opts)
-    vim.keymap.set('n', '[d', function() vim.diagnostic.goto_next() end, opts)
-    vim.keymap.set('n', ']d', function() vim.diagnostic.goto_prev() end, opts)
-    vim.keymap.set('n', '<leader>vca', function() vim.lsp.buf.code_action() end, opts)
-    vim.keymap.set('n', '<leader>vrr', function() vim.lsp.buf.references() end, opts)
-    vim.keymap.set('n', '<leader>vrn', function() vim.lsp.buf.rename() end, opts)
-    vim.keymap.set('i', '<C-h>', function() vim.lsp.buf.signature_help() end, opts)
+    vim.keymap.set('n', keymaps.lsp_definition, function() vim.lsp.buf.definition() end, opts)
+    vim.keymap.set('n', keymaps.lsp_hover, function() vim.lsp.buf.hover() end, opts)
+    vim.keymap.set('n', keymaps.lsp_workspace_symbol, function() vim.lsp.buf.workspace_symbol() end, opts)
+    vim.keymap.set('n', keymaps.lsp_diagnostic_open_float, function() vim.diagnostic.open_float() end, opts)
+    vim.keymap.set('n', keymaps.lsp_diagnostic_goto_next, function() vim.diagnostic.goto_next() end, opts)
+    vim.keymap.set('n', keymaps.lsp_diagnostic_goto_previous, function() vim.diagnostic.goto_prev() end, opts)
+    vim.keymap.set('n', keymaps.lsp_buf_code_action, function() vim.lsp.buf.code_action() end, opts)
+    vim.keymap.set('n', keymaps.lsp_buf_references, function() vim.lsp.buf.references() end, opts)
+    vim.keymap.set('n', keymaps.lsp_buf_rename, function() vim.lsp.buf.rename() end, opts)
+    vim.keymap.set('i', keymaps.lsp_buf_signature_help, function() vim.lsp.buf.signature_help() end, opts)
   end,
 })
 
@@ -76,10 +79,10 @@ cmp.setup({
     {name = 'buffer'},
   }),
   mapping = cmp.mapping.preset.insert({
-    ['<C-t>'] = cmp.mapping.select_prev_item(cmp_select),
-    ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-    ['<C-i>'] = cmp.mapping.confirm({select = true}),
-    ['<C-Space>'] = cmp.mapping.complete(),
+    [keymaps.lsp_select_prev_item] = cmp.mapping.select_prev_item(cmp_select),
+    [keymaps.lsp_select_next_item] = cmp.mapping.select_next_item(cmp_select),
+    [keymaps.lsp_confirm] = cmp.mapping.confirm({select = true}),
+    [keymaps.lsp_complete] = cmp.mapping.complete(),
   }),
   snippet = {
     expand = function(args)

@@ -1,1 +1,2 @@
-vim.keymap.set("n", "<leader>gs", vim.cmd.Git);
+require("chrfesche.remap")
+vim.keymap.set("n", keymaps.fugitive_git, vim.cmd.Git);
