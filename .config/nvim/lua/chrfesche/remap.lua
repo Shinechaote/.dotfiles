@@ -38,6 +38,11 @@ keymaps.harpoon_nav_file_3 = "<C-l>"
 
 -- Fugitive
 keymaps.fugitive_git = "<leader>gs"
+keymaps.fugitive_push = "<leader>p"
+keymaps.fugitive_rebase_pull = "<leader>P"
+keymaps.fugitive_primeagen_push_hack = "<leader>t"
+keymaps.fugitive_primeagen_diffget_2 = "gu"
+keymaps.fugitive_primeagen_diffget_3 = "gh"
 
 -- Undotree
 keymaps.undotree_toggle = "<leader>u"
