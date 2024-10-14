@@ -6,3 +6,4 @@
 .uuid
 *.sqlite
 .config/tmux/plugins
+.config/Code/settings.json
