@@ -23,6 +23,8 @@ return {
             vim.lsp.protocol.make_client_capabilities(),
             cmp_lsp.default_capabilities())
 
+--        vim.keymap.set('n', keymaps.lsp_format, vim.lsp.buf.format({ async = true }), { desc = 'Telescope find files' })
+
         require("fidget").setup({})
         require("mason").setup()
         require("mason-lspconfig").setup({
@@ -51,20 +53,25 @@ return {
                         }
                     }
                 end,
-                require('lspconfig').pylsp.setup({
-            settings = {
-                pylsp = {
-                    plugins = {
-                        pycodestyle = { enabled = false }, -- Disables pycodestyle linting
-                        pyflakes = { enabled = false },    -- Disables pyflakes linting
-                        pylint = { enabled = false },      -- Disables pylint linting (if enabled)
-                        flake8 = { enabled = false },      -- Disables flake8 (if installed and enabled)
-                        mccabe = { enabled = false },      -- Disables mccabe complexity checker
-                        -- Add any other linters or plugins you want to disable here
-                    }
-                }
-            }
-    })
+                ["pylsp"] = function ()
+                    require('lspconfig').pylsp.setup({
+                        capabilities = capabilities,
+                        settings = {
+                            pylsp = {
+                                plugins = {
+                                    pycodestyle = { enabled=true, ignore={'E501',"E116",'E231'} },
+                                    pyflakes = { enabled = false },
+                                    pylint = {args = {'--ignore=E501,E231,E116', '-'}, enabled=true, debounce=200},
+                                    flake8 = { enabled = false },
+                                    mccabe = { enabled = false },
+                                    yapf={enabled=true},
+                                    black={enabled=true}
+                                    -- Add any other linters or plugins you want to disable here
+                                }
+                            }
+                        }
+                    })
+                end
             }
         })
 
