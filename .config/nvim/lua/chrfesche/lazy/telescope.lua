@@ -14,6 +14,9 @@ return {
     config = function()
 
         require('telescope').setup {
+            defaults = {
+                path_display = { "tail" }  -- Shows the end of the file path
+            },
             pickers = {
                 find_files = {
                     hidden=true,
