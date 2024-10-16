@@ -51,5 +51,5 @@ keymaps.undotree_toggle = "<leader>u"
 keymaps.telescope_find_files = "<C-t>"
 keymaps.telescope_git_files = "<leader>pf"
 keymaps.telescope_grep_string = "<leader>ps"
-keymaps.telescope_find_depth_2 = "<C-p>"
+keymaps.telescope_find_depth_4 = "<C-p>"
 
