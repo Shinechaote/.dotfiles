@@ -15,6 +15,7 @@ bindsym $mod+z exec --no-startup-id "slock && xset dpms 900 960 960 & xset dpms 
 
 # Background and Terminal Background
 exec_always --no-startup-id feh --bg-scale $HOME/dotfiles/tiny-wizard.png
+exec_always --no-startup-id compton
 exec --no-startup-id redshift-gtk -l 50.1:08.6 -m randr -v
 
 
@@ -84,7 +85,7 @@ set $right l
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec kitty
 
 # kill focused window
 bindsym $mod+Shift+q kill

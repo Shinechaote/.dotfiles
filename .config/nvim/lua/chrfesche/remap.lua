@@ -28,6 +28,7 @@ keymaps.lsp_select_prev_item = '<C-t>'
 keymaps.lsp_select_next_item = '<C-n>'
 keymaps.lsp_confirm = '<C-i>'
 keymaps.lsp_complete = '<C-Space>'
+keymaps.lsp_format = "<leader>f"
 
 -- Harpoon
 keymaps.harpoon_add_file = "<leader>a"

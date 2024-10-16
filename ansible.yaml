@@ -1,36 +1,194 @@
-# tasks file for oh_my_zsh
-- name: Install Git
-  become: true
-  ansible.builtin.package:
-    state: present
-    name: git
- 
-- name: Install ZSH
-  become: true
-  ansible.builtin.package:
-    name: zsh
-    state: present
+- name: Install docker 
+  hosts: localhost
+  become: yes
+
+  pre_tasks:
+    - name: Update APT package cache
+      apt:
+        update_cache: yes
+
+  tasks:
+    - name: Install prerequisite packages
+      apt:
+        name:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        state: present
+        update_cache: yes
+
+    - name: Add Docker’s official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+        update_cache: yes
+
+    - name: Install Docker
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: latest
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Add user to the docker group (optional, for non-root users)
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+- name: Install basic packages 
+  hosts: localhost
+  become: yes
+
+  pre_tasks:
+    - name: Update APT package cache
+      apt:
+        update_cache: yes
+
+  tasks:
+    - name: Install basic packages
+      apt: 
+        name:
+         - git
+         - unar
+         - curl
+         - cmake
 
 
+- name: Install Kitty terminal
+  hosts: localhost
+  become: yes  # Ensures the task runs with elevated privileges (sudo)
+  tasks:
+    - name: Ensure the system is updated
+      apt:
+        update_cache: yes
 
- # unzip is useful for extracting zips
-- name: Install unzip
-  become: true
-  ansible.builtin.package:
-    state: present
-    name: unzip
-- name: Install cmake
-  become: true
-  ansible.builtin.package:
-    state: present
-    name: cmake
-- name: Install curl
-  become: true
-  ansible.builtin.package:
-    state: present
-    name: curl
-- name: Install discord
-  become: true
-  ansible.builtin.package:
-    state: present
-    name: discord
+    - name: Install dependencies for Kitty
+      apt:
+        name:
+          - libxkbcommon-x11-0
+          - curl
+        state: present
+
+    - name: Download Kitty
+      get_url:
+        url: https://sw.kovidgoyal.net/kitty/installer.sh
+        dest: /tmp/kitty-installer.sh
+        mode: '0755'
+
+    - name: Install Kitty
+      command: /tmp/kitty-installer.sh dest=~/.local/kitty
+
+    - name: Create a symbolic link to make kitty accessible from PATH
+      file:
+        src: "{{ ansible_env.HOME }}/.local/kitty/kitty.app/bin/kitty"
+        dest: /usr/local/bin/kitty
+        state: link
+
+    - name: Set Kitty as the default terminal emulator 
+      alternatives:
+        name: x-terminal-emulator
+        link: /usr/local/bin/x-terminal-emulator
+        path: /usr/local/bin/kitty
+        priority: 100
+
+    - name: Clean up installer script
+      file:
+        path: /tmp/kitty-installer.sh
+        state: absent
+
+- name: Install dotfiles applications 
+  hosts: localhost
+  become: yes
+
+  pre_tasks:
+    - name: Update APT package cache
+      apt:
+        update_cache: yes
+    - name: Clone dotfiles repo
+      git:
+        repo: 'https://github.com/Shinechaote/.dotfiles.git'
+        dest: "{{ansible_env.HOME}}/dotfiles"
+        update: yes
+
+    - name: Install snapd 
+      apt: 
+        name:
+         - snapd 
+  tasks:
+    - name: Install zsh
+      apt: 
+        name:
+         - zsh
+    - name: Change Shell
+      shell: chsh -s `which zsh`
+    - name: Install oh-my-zsh
+      shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
+      args:
+        creates: ~/.oh-my-zsh  
+
+    - name: Install zsh-autosuggestions
+      git:
+        repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+        dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
+        update: yes
+
+#    - name: Install discord
+#      snap: 
+        name:
+         - discord 
+
+    - name: Install i3
+      apt: 
+        name:
+         - i3
+
+    - name: Install rofi
+      apt: 
+        name:
+         - rofi
+
+    - name: Install neovim
+      apt: 
+        name:
+         - neovim 
+
+    - name: Install xbindkeys
+      apt: 
+        name:
+         - xbindkeys
+
+    - name: Install VS Code
+      apt: 
+        name:
+         - code
+
+    - name: Install KeePassXC
+      apt: 
+        name:
+         - keepassxc
+    - name: Install redshift
+      apt: 
+        name:
+         - redshift
+    - name: Install redshift-gtk
+      apt: 
+        name:
+         - redshift-gtk
+
+
+    - name: Install configs
+      shell: "{{ansible_env.HOME}}/dotfiles/install.sh" 
