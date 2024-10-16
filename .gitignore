@@ -7,3 +7,5 @@
 *.sqlite
 .config/tmux/plugins
 .config/Code/settings.json
+.config/nvim/lazy-lock.json
+.config/nvim/.netrwhist
