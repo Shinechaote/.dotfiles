@@ -16,7 +16,7 @@ bindsym $mod+z exec --no-startup-id "slock && xset dpms 900 960 960 & xset dpms 
 # Background and Terminal Background
 exec_always --no-startup-id feh --bg-scale $HOME/dotfiles/tiny-wizard.png
 exec --no-startup-id picom 
-exec --no-startup-id redshift-gtk -l 50.1:08.6 -m randr -v
+exec --no-startup-id redshift-gtk -t 6500:3000 -l 50.1:08.6 -m randr -v
 
 
 # Colors

@@ -8,14 +8,7 @@ return {
         local harpoon = require('harpoon')
         harpoon:setup({})
 
-        -- basic telescope configuration
-        local function toggle_telescope(harpoon_files)
-            local file_paths = {}
-            for _, item in ipairs(harpoon_files.items) do
-                table.insert(file_paths, item.value)
-            end
-        end
-        vim.keymap.set("n", keymaps.harpoon_toggle_quick_menu, function() toggle_telescope(harpoon:list()) end,
+        vim.keymap.set("n", keymaps.harpoon_toggle_quick_menu, function() harpoon.ui:toggle_quick_menu(harpoon:list()) end,
             { desc = "Open harpoon window" })
         vim.keymap.set("n", keymaps.harpoon_add_file, function() harpoon:list():add() end)
 
