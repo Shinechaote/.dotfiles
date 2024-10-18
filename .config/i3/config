@@ -15,7 +15,7 @@ bindsym $mod+z exec --no-startup-id "slock && xset dpms 900 960 960 & xset dpms 
 
 # Background and Terminal Background
 exec_always --no-startup-id feh --bg-scale $HOME/dotfiles/tiny-wizard.png
-exec_always --no-startup-id compton
+exec_always --no-startup-id picom 
 exec --no-startup-id redshift-gtk -l 50.1:08.6 -m randr -v
 
 
@@ -202,7 +202,7 @@ assign [class="discord"] $ws5
 assign [class="KeePassXC"] $ws6
 assign [class="Sublime_text"] $ws4
 
-exec --no-startup-id i3-msg "workspace $ws0;exec gnome-terminal"
+exec --no-startup-id i3-msg "workspace $ws0;exec kitty"
 exec --no-startup-id i3-msg "workspace $ws1;exec firefox"
 exec --no-startup-id i3-msg move workspace $ws1 to output right
 

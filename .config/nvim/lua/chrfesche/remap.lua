@@ -2,7 +2,7 @@ vim.g.mapleader = " "
 
 vim.keymap.set("n", "<leader>w", vim.cmd.Ex)
 
-local pattern = [[\v['"`({[< ]@<=([a-zA-Z0-9])|^([a-zA-Z0-9])|(.)$|([][(){}<>.,;_+-])@<=([a-zA-Z0-9])|(['"])@<=([][(){}<>.,;_+-\$])(['"])]]
+local pattern = [[\v['"`({[< ]@<=([a-zA-Z0-9])|^([a-zA-Z0-9])|(.)$|([][(){}<>/.,;_+-])@<=([a-zA-Z0-9])|(['"])@<=([][(){}<>/.,;_+-\$])(['"])]]
 vim.keymap.set({'n', 'v'}, 'w', function()
   vim.fn.search(pattern)
 end)
@@ -40,6 +40,7 @@ keymaps.harpoon_nav_file_3 = "<C-l>"
 -- Fugitive
 keymaps.fugitive_git = "<leader>gs"
 keymaps.fugitive_push = "<leader>p"
+keymaps.fugitive_primeagen_push_hack = "<leader>p"
 keymaps.fugitive_rebase_pull = "<leader>P"
 keymaps.fugitive_primeagen_push_hack = "<leader>t"
 keymaps.fugitive_primeagen_diffget_2 = "gu"
