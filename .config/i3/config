@@ -15,7 +15,7 @@ bindsym $mod+z exec --no-startup-id "slock && xset dpms 900 960 960 & xset dpms 
 
 # Background and Terminal Background
 exec_always --no-startup-id feh --bg-scale $HOME/dotfiles/tiny-wizard.png
-exec_always --no-startup-id picom 
+exec --no-startup-id picom 
 exec --no-startup-id redshift-gtk -l 50.1:08.6 -m randr -v
 
 
@@ -243,6 +243,8 @@ bindsym $mod+4 mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
+        wheel_up_cmd nop
+        wheel_down_cmd nop
         status_command i3blocks -c ~/.config/i3/i3blocks.conf
         tray_output DP-2 
         font pango:Helvetica 12
