@@ -23,7 +23,7 @@ return {
             vim.lsp.protocol.make_client_capabilities(),
             cmp_lsp.default_capabilities())
 
---        vim.keymap.set('n', keymaps.lsp_format, vim.lsp.buf.format({ async = true }), { desc = 'Telescope find files' })
+        --        vim.keymap.set('n', keymaps.lsp_format, vim.lsp.buf.format({ async = true }), { desc = 'Telescope find files' })
 
         require("fidget").setup({})
         require("mason").setup()
@@ -34,7 +34,6 @@ return {
             },
             handlers = {
                 function(server_name) -- default handler (optional)
-
                     require("lspconfig")[server_name].setup {
                         capabilities = capabilities
                     }
@@ -53,19 +52,19 @@ return {
                         }
                     }
                 end,
-                ["pylsp"] = function ()
+                ["pylsp"] = function()
                     require('lspconfig').pylsp.setup({
                         capabilities = capabilities,
                         settings = {
                             pylsp = {
                                 plugins = {
-                                    pycodestyle = { enabled=true, ignore={'E501',"E116",'E231'} },
+                                    pycodestyle = { enabled = false },
                                     pyflakes = { enabled = false },
-                                    pylint = {args = {'--ignore=E501,E231,E116', '-'}, enabled=true, debounce=200},
+                                    pylint = { enabled = false },
                                     flake8 = { enabled = false },
                                     mccabe = { enabled = false },
-                                    yapf={enabled=true},
-                                    black={enabled=true}
+                                    yapf = { enabled = false },
+                                    black = { enabled = true },
                                     -- Add any other linters or plugins you want to disable here
                                 }
                             }
@@ -96,6 +95,7 @@ return {
                 { name = 'buffer' },
             })
         })
+        vim.keymap.set("n", keymaps.lsp_format, function() vim.lsp.buf.format() end)
 
         vim.diagnostic.config({
             -- update_in_insert = true,
@@ -110,4 +110,3 @@ return {
         })
     end
 }
-
