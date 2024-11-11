@@ -14,6 +14,7 @@ return {
         "j-hui/fidget.nvim",
     },
 
+
     config = function()
         local cmp = require('cmp')
         local cmp_lsp = require("cmp_nvim_lsp")
@@ -25,6 +26,22 @@ return {
 
         --        vim.keymap.set('n', keymaps.lsp_format, vim.lsp.buf.format({ async = true }), { desc = 'Telescope find files' })
 
+        -- Function for LSP keymaps
+        local on_attach = function()
+            local opts = {remap = false }
+
+            -- Key mappings for LSP features
+            vim.keymap.set("n", keymaps.lsp_definition, function() vim.lsp.buf.definition() end, opts)
+            vim.keymap.set("n", keymaps.lsp_hover, function() vim.lsp.buf.hover() end, opts)
+            vim.keymap.set("n", keymaps.lsp_workspace_symbol, function() vim.lsp.buf.workspace_symbol() end, opts)
+            vim.keymap.set("n", keymaps.lsp_diagnostic_open_float, function() vim.diagnostic.open_float() end, opts)
+            vim.keymap.set("n", keymaps.lsp_diagnostic_goto_next, function() vim.diagnostic.goto_next() end, opts)
+            vim.keymap.set("n", keymaps.lsp_diagnostic_goto_previous, function() vim.diagnostic.goto_prev() end, opts)
+            vim.keymap.set("n", keymaps.lsp_buf_code_action, function() vim.lsp.buf.code_action() end, opts)
+            vim.keymap.set("n", keymaps.lsp_buf_references, function() vim.lsp.buf.references() end, opts)
+            vim.keymap.set("n", keymaps.lsp_buf_rename, function() vim.lsp.buf.rename() end, opts)
+            vim.keymap.set("i", keymaps.lsp_buf_signature_help, function() vim.lsp.buf.signature_help() end, opts)
+        end
         require("fidget").setup({})
         require("mason").setup()
         require("mason-lspconfig").setup({
@@ -39,6 +56,7 @@ return {
                     require("lspconfig")[server_name].setup {
                         capabilities = capabilities
                     }
+                    on_attach()
                 end,
 
                 ["lua_ls"] = function()
@@ -53,6 +71,7 @@ return {
                             }
                         }
                     }
+                    on_attach()
                 end,
                 ["pylsp"] = function()
                     require('lspconfig').pylsp.setup({
@@ -72,6 +91,7 @@ return {
                             }
                         }
                     })
+                    on_attach()
                 end
             }
         })
@@ -97,8 +117,6 @@ return {
                 { name = 'buffer' },
             })
         })
-        vim.keymap.set("n", keymaps.lsp_format, function() vim.lsp.buf.format() end)
-
         vim.diagnostic.config({
             -- update_in_insert = true,
             float = {
