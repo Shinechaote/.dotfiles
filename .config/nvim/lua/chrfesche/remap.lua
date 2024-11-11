@@ -1,6 +1,9 @@
 vim.g.mapleader = " "
 
+-- File explorer
 vim.keymap.set("n", "<leader>w", vim.cmd.Ex)
+-- Paste without changing buffer
+vim.keymap.set("x", "<leader>p", [["_dP]])
 
 local pattern = [[\v['"`({[< ]@<=([a-zA-Z0-9])|^([a-zA-Z0-9])|(.)$|([][(){}<>/.,;_+-])@<=([a-zA-Z0-9])|(['"])@<=([][(){}<>/.,;_+-\$])(['"])]]
 vim.keymap.set({'n', 'v'}, 'w', function()
@@ -10,6 +13,7 @@ vim.keymap.set({'n', 'v'}, 'b', function()
     --(word) backwards
   vim.fn.search(pattern, 'b')
 end)
+
 
 _G.keymaps = {}
 -- LSP
@@ -55,3 +59,5 @@ keymaps.telescope_git_files = "<leader>pf"
 keymaps.telescope_grep_string = "<leader>ps"
 keymaps.telescope_find_depth_4 = "<C-p>"
 
+-- Commenter
+keymaps.comment_toggle = "<leader>c"
