@@ -5,7 +5,7 @@ vim.keymap.set("n", "<leader>w", vim.cmd.Ex)
 -- Paste without changing buffer
 vim.keymap.set("x", "<leader>p", [["_dP]])
 
-local pattern = [[\v['"`({[< ]@<=([a-zA-Z0-9])|^([a-zA-Z0-9])|(.)$|([][(){}<>/.,;_+-])@<=([a-zA-Z0-9])|(['"])@<=([][(){}<>/.,;_+-\$])(['"])]]
+local pattern = [[\v['"`({[< ]@<=([a-zA-Z0-9])|^([a-zA-Z0-9])|(.)$|([][(){}<>/.,;_=+-])@<=([a-zA-Z0-9])|(['"])@<=([][(){}<>/.,;_=+-\$])(['"])]]
 vim.keymap.set({'n', 'v'}, 'w', function()
   vim.fn.search(pattern)
 end)
