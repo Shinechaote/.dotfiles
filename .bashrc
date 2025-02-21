@@ -119,7 +119,7 @@ fi
 export DET_MASTER=https://login01.ai.tu-darmstadt.de:8080/det
 
 alias openvideo="vlc v4l2:///dev/video0"
-
+alias python="python3"
 alias vim=nvim
 
 move_and_symlink() {
@@ -138,3 +138,6 @@ move_and_symlink() {
     ln -s "$dest" "$src"
 
 }
+
+export PATH=/usr/local/cuda-11.8/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH

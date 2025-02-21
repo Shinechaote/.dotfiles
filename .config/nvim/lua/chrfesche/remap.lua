@@ -26,7 +26,7 @@ keymaps.lsp_diagnostic_goto_previous = ']d'
 keymaps.lsp_buf_code_action = '<leader>vca'
 keymaps.lsp_buf_references = '<leader>vrr'
 keymaps.lsp_buf_rename = '<leader>vrn'
-keymaps.lsp_buf_signature_help = '<C-h>'
+keymaps.lsp_buf_signature_help = '<C-b>'
 
 keymaps.lsp_select_prev_item = '<C-t>'
 keymaps.lsp_select_next_item = '<C-n>'

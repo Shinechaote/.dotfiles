@@ -24,7 +24,6 @@ return {
             vim.lsp.protocol.make_client_capabilities(),
             cmp_lsp.default_capabilities())
 
-        --        vim.keymap.set('n', keymaps.lsp_format, vim.lsp.buf.format({ async = true }), { desc = 'Telescope find files' })
 
         -- Function for LSP keymaps
         local on_attach = function()
@@ -41,6 +40,8 @@ return {
             vim.keymap.set("n", keymaps.lsp_buf_references, function() vim.lsp.buf.references() end, opts)
             vim.keymap.set("n", keymaps.lsp_buf_rename, function() vim.lsp.buf.rename() end, opts)
             vim.keymap.set("i", keymaps.lsp_buf_signature_help, function() vim.lsp.buf.signature_help() end, opts)
+            vim.keymap.set("n", keymaps.lsp_buf_signature_help, function() vim.lsp.buf.signature_help() end, opts)
+            vim.keymap.set('n', keymaps.lsp_format, function() vim.lsp.buf.format() end,opts)
         end
         require("fidget").setup({})
         require("mason").setup()
