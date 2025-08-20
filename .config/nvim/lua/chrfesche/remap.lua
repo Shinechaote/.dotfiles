@@ -14,7 +14,6 @@ vim.keymap.set({'n', 'v'}, 'b', function()
   vim.fn.search(pattern, 'b')
 end)
 
-
 _G.keymaps = {}
 -- LSP
 keymaps.lsp_definition = 'gd'
@@ -30,9 +29,10 @@ keymaps.lsp_buf_signature_help = '<C-b>'
 
 keymaps.lsp_select_prev_item = '<C-t>'
 keymaps.lsp_select_next_item = '<C-n>'
-keymaps.lsp_confirm = '<C-i>'
+keymaps.lsp_confirm = '<M-i>'
 keymaps.lsp_complete = '<C-Space>'
 keymaps.lsp_format = "<leader>f"
+
 
 -- Harpoon
 keymaps.harpoon_add_file = "<leader>a"

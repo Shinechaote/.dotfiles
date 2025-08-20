@@ -18,7 +18,6 @@ exec_always --no-startup-id feh --bg-scale $HOME/dotfiles/tiny-wizard.png
 exec --no-startup-id picom 
 exec --no-startup-id redshift-gtk -t 6500:3000 -l 50.1:08.6 -m randr -v
 
-
 # Colors
 set $wm_color_border_active_bg       #83B8C6
 set $wm_color_border_active_fg       #3B4252
