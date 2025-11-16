@@ -11,6 +11,7 @@
 
 set $mod Mod4
 exec --no-startup-id xset dpms 900 960 960 
+exec --no-startup-id xrandr --output HDMI-0 --primary --left-of DP-4
 bindsym $mod+z exec --no-startup-id "slock && xset dpms 900 960 960 & xset dpms 5"
 
 # Background and Terminal Background
@@ -85,6 +86,7 @@ floating_modifier $mod
 
 # start a terminal
 bindsym $mod+Return exec kitty
+bindsym $mod+q exec nautilus --no-desktop
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -245,7 +247,7 @@ bar {
         wheel_up_cmd nop
         wheel_down_cmd nop
         status_command i3blocks -c ~/.config/i3/i3blocks.conf
-        tray_output DP-2 
+        tray_output primary
         font pango:Helvetica 12
 }
 

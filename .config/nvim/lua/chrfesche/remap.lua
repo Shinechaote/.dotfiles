@@ -2,6 +2,7 @@ vim.g.mapleader = " "
 
 -- File explorer
 vim.keymap.set("n", "<leader>w", vim.cmd.Ex)
+vim.keymap.set("n", "<leader>t", ":w<CR>")
 -- Paste without changing buffer
 vim.keymap.set("x", "<leader>p", [["_dP]])
 
@@ -20,8 +21,8 @@ keymaps.lsp_definition = 'gd'
 keymaps.lsp_hover = 'K'
 keymaps.lsp_workspace_symbol = '<leader>vws'
 keymaps.lsp_diagnostic_open_float = '<leader>vd'
-keymaps.lsp_diagnostic_goto_next = '[d'
-keymaps.lsp_diagnostic_goto_previous = ']d'
+keymaps.lsp_diagnostic_goto_next = ']d'
+keymaps.lsp_diagnostic_goto_previous = '[d'
 keymaps.lsp_buf_code_action = '<leader>vca'
 keymaps.lsp_buf_references = '<leader>vrr'
 keymaps.lsp_buf_rename = '<leader>vrn'
