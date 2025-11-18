@@ -96,6 +96,8 @@ alias l='ls -CF'
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
+alias combineallmp4="echo \"ffmpeg -f concat -safe 0 -i <(for f in *.mp4; do echo \"file '$PWD/$f'\"; done) -filter:v \"setpts=2.0*PTS\" output_slow.mp4\""
+
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
@@ -116,28 +118,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export DET_MASTER=https://login01.ai.tu-darmstadt.de:8080/det
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-alias openvideo="vlc v4l2:///dev/video0"
-alias python="python3"
-alias vim=nvim
-
-move_and_symlink() {
-    if [ $# -ne 2 ]; then
-        echo "Usage: move_and_symlink <source> <destination>"
-        return 1
-    fi
-    
-    local src=$(realpath "$1")  # Get the absolute path of the source
-    local dest=$(realpath "$2") # Get the absolute path of the destination
-
-    # Move the source to the destination
-    mv "$src" "$dest"
-
-    # Create the symlink from destination back to the original source path
-    ln -s "$dest" "$src"
-
-}
-
-export PATH=/usr/local/cuda-11.8/bin:$PATH
-export LD_LIBRARY_PATH=/usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH

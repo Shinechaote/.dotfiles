@@ -3,7 +3,6 @@
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-setopt CORRECT
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
@@ -71,7 +70,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting command-not-found)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -103,32 +102,63 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-# export DET_MASTER=https://login01.ai.tu-darmstadt.de:8080/det
-
-alias openvideo="vlc v4l2:///dev/video0"
-
 alias vim=nvim
 alias python=python3
-move_and_symlink() {
-    if [ $# -ne 2 ]; then
-        echo "Usage: move_and_symlink <source> <destination>"
-        return 1
-    fi
-    
-    local src=$(realpath "$1")  # Get the absolute path of the source
-    local dest=$(realpath "$2") # Get the absolute path of the destination
-
-    # Move the source to the destination
-    mv "$src" "$dest"
-
-    # Create the symlink from destination back to the original source path
-    ln -s "$dest" "$src"
-
-}
 [ "$TERM" = "xterm-kitty" ] && alias ssh="kitty +kitten ssh"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/christian/.mujoco/mujoco210/bin
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+
+# Created by `pipx` on 2025-08-19 09:17:04
+export PATH="$PATH:/home/scherer/.local/bin"
+export PATH="/usr/local/texlive/2025/bin/x86_64-linux:$PATH"
+alias samsung="python $HOME/s3-mini/s3-mini/boot.py"
+
+touch /tmp/.docker.xauth
+xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f /tmp/.docker.xauth nmerge -
+
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/nvidia
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/scherer/.mujoco/mujoco210/bin
+select_wandb_run() {
+    local base="wandb"
+
+    local selection=$(
+        find "$base" -maxdepth 1 -type d -name "run-*" \
+        | awk -F '/' '
+            {
+                name = $NF
+                # name format: run-YYYYMMDD_HHMMSS-id
+                sub(/^run-/, "", name)
+
+                split(name, parts, "-")
+                ts = parts[1]
+                id = parts[2]
+
+                year  = substr(ts, 1, 4)
+                month = substr(ts, 5, 2)
+                day   = substr(ts, 7, 2)
+                hour  = substr(ts, 10, 2)
+                min   = substr(ts, 12, 2)
+                sec   = substr(ts, 14, 2)
+
+                cmd = sprintf("date -d \"%s-%s-%s %s:%s:%s\" +\"%%Y-%%m-%%d %%H:%%M:%%S\"", 
+                               year, month, day, hour, min, sec)
+                cmd | getline formatted
+                close(cmd)
+
+                printf "%s %s %s\n", formatted, id, $0
+            }
+        ' \
+        | fzf --with-nth=1,2,3 --delimiter=' ' --prompt="Select W&B run: "
+    )
+
+    [[ -z "$selection" ]] && return
+
+    # Path is the final field
+    local path=$(echo "$selection" | awk '{print $NF}')
+
+    echo 'wandb beta leet ' $path
+
+}
