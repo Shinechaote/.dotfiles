@@ -1,54 +1,3 @@
-- name: Install docker 
-  hosts: localhost
-  become: yes
-
-  pre_tasks:
-    - name: Update APT package cache
-      apt:
-        update_cache: yes
-
-  tasks:
-    - name: Install prerequisite packages
-      apt:
-        name:
-        - apt-transport-https
-        - ca-certificates
-        - curl
-        - software-properties-common
-        state: present
-        update_cache: yes
-
-    - name: Add Docker’s official GPG key
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
-
-    - name: Add Docker APT repository
-      apt_repository:
-        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
-        state: present
-        update_cache: yes
-
-    - name: Install Docker
-      apt:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-        state: latest
-
-    - name: Start and enable Docker service
-      systemd:
-        name: docker
-        enabled: yes
-        state: started
-
-    - name: Add user to the docker group (optional, for non-root users)
-      user:
-        name: "{{ ansible_user }}"
-        groups: docker
-        append: yes
-
 - name: Install basic packages 
   hosts: localhost
   become: yes
@@ -66,7 +15,25 @@
          - unar
          - curl
          - cmake
-
+         - ffmpeg
+         - findutils
+         - flatpak
+         - fzf
+         - gimp
+         - ripgrep
+         - unar
+         - inkscape
+         - pavucontrol
+         - picom
+         - redshift-gtk
+         - rofi
+         - vlc
+         - xbindkeys
+         - xautomation
+         - xclip
+         - xdotool
+         - snapd 
+         - keepassxc
 
 - name: Install Kitty terminal
   hosts: localhost
@@ -115,19 +82,12 @@
   become: yes
 
   pre_tasks:
-    - name: Update APT package cache
-      apt:
-        update_cache: yes
     - name: Clone dotfiles repo
       git:
         repo: 'https://github.com/Shinechaote/.dotfiles.git'
         dest: "{{ansible_env.HOME}}/dotfiles"
         update: yes
 
-    - name: Install snapd 
-      apt: 
-        name:
-         - snapd 
   tasks:
     - name: Install zsh
       apt: 
@@ -146,49 +106,319 @@
         dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
         update: yes
 
-#    - name: Install discord
-#      snap: 
-        name:
-         - discord 
-
-    - name: Install i3
-      apt: 
-        name:
-         - i3
-
-    - name: Install rofi
-      apt: 
-        name:
-         - rofi
-
-    - name: Install neovim
-      apt: 
-        name:
-         - neovim 
-
-    - name: Install xbindkeys
-      apt: 
-        name:
-         - xbindkeys
-
-    - name: Install VS Code
-      apt: 
-        name:
-         - code
-
-    - name: Install KeePassXC
-      apt: 
-        name:
-         - keepassxc
-    - name: Install redshift
-      apt: 
-        name:
-         - redshift
-    - name: Install redshift-gtk
-      apt: 
-        name:
-         - redshift-gtk
-
-
     - name: Install configs
       shell: "{{ansible_env.HOME}}/dotfiles/install.sh" 
+
+
+- name: Install i3 Window Manager and Desktop Utilities
+  hosts: localhost
+  connection: local
+  become: true
+  vars:
+    user_home: "{{ ansible_env.HOME }}"
+    i3_config_dir: "{{ user_home }}/.config/i3"
+    discord_url: "https://discord.com/api/download?platform=linux&format=deb"
+    discord_tmp_path: "/tmp/discord.deb"
+    discord_config_dir: "{{ user_home }}/.config/discord"
+    discord_settings_file: "{{ discord_config_dir }}/settings.json"
+
+  tasks:
+    # ---------------------------------------------------------
+    # 1. Core Repositories & Dependencies
+    # ---------------------------------------------------------
+    - name: Install dependencies for HTTPS repositories
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - curl
+          - software-properties-common
+          - gnupg
+        state: present
+        update_cache: true
+
+    # ---------------------------------------------------------
+    # 2. Sublime Text Setup (Official Repo)
+    # ---------------------------------------------------------
+    - name: Add Sublime Text GPG key
+      ansible.builtin.get_url:
+        url: https://download.sublimetext.com/sublimehq-pub.gpg
+        dest: /usr/share/keyrings/sublimehq-archive-keyring.gpg
+        mode: '0644'
+
+    - name: Add Sublime Text repository
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/sublimehq-archive-keyring.gpg] https://download.sublimetext.com/ apt/stable/"
+        state: present
+        filename: sublime-text
+
+    # ---------------------------------------------------------
+    # 3. Install Packages
+    # ---------------------------------------------------------
+    - name: Install i3 and System Utilities
+      ansible.builtin.apt:
+        name:
+          # Core i3
+          - i3-wm
+          - i3blocks
+          - i3status
+          - i3lock
+          # Screen & Power
+          - slock             # Required by your config
+          - xss-lock          # Session locking
+          - feh               # Wallpaper
+          - picom             # Compositor (transparency)
+          - redshift-gtk      # Color temp (blue light)
+          - autorandr         # Display profile manager
+          # Inputs & Tools
+          - rofi              # Launcher
+          - xclip             # Clipboard
+          - maim              # Screenshots
+          - xdotool           # Window automation
+          - dex               # XDG autostart
+          # Audio & Media
+          - pulseaudio-utils  # For pactl
+          - pavucontrol       # GUI for audio control
+          - playerctl         # Media keys
+          # Network
+          - network-manager-gnome # nm-applet
+          # Applications from config
+          - sublime-text
+        state: present
+        update_cache: true
+
+    # ---------------------------------------------------------
+    # Install Discord
+    # ---------------------------------------------------------
+    - name: Install system dependencies (jq needed for config patch)
+      ansible.builtin.apt:
+        name:
+          - jq
+          - wget
+          - libgconf-2-4
+          - libappindicator1
+          - libc++1
+        state: present
+        update_cache: true
+
+    - name: Download Discord .deb
+      ansible.builtin.get_url:
+        url: "{{ discord_url }}"
+        dest: "{{ discord_tmp_path }}"
+        mode: '0644'
+
+    - name: Install Discord package
+      ansible.builtin.apt:
+        deb: "{{ discord_tmp_path }}"
+        state: present
+
+    # ---------------------------------------------------------
+    # Configure settings.json (Disable Auto-Update)
+    # ---------------------------------------------------------
+    - name: Ensure Discord config directory exists
+      become: false
+      ansible.builtin.file:
+        path: "{{ discord_config_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Apply SKIP_HOST_UPDATE to settings.json
+      become: false
+      ansible.builtin.shell: |
+        # 1. Create settings.json if it doesn't exist (Simulating "Generation")
+        if [ ! -f "{{ discord_settings_file }}" ]; then
+          echo "{}" > "{{ discord_settings_file }}"
+        fi
+        
+        # 2. Use jq to safely add/update the flag without overwriting other settings
+        jq '. + {"SKIP_HOST_UPDATE": true}' "{{ discord_settings_file }}" > "{{ discord_settings_file }}.tmp" && mv "{{ discord_settings_file }}.tmp" "{{ discord_settings_file }}"
+      args:
+        executable: /bin/bash
+      register: config_patch
+      changed_when: true
+
+    # ---------------------------------------------------------
+    # Install Firefox
+    # ---------------------------------------------------------
+    - name: Install Firefox (Snap)
+      community.general.snap:
+        name: firefox
+        state: present
+
+    # ---------------------------------------------------------
+    # 5. Configuration Deployment
+    # ---------------------------------------------------------
+    - name: Ensure i3 config directory exists
+      become: false
+      ansible.builtin.file:
+        path: "{{ i3_config_dir }}"
+        state: directory
+        mode: '0755'
+
+
+- name: Install Nextcloud Client (AppImage) and AppImageLauncher
+  hosts: localhost
+  connection: local
+  become: false
+  vars:
+    app_dir: "{{ ansible_env.HOME }}/Applications"
+    # We rename the file locally so the desktop entry doesn't break on updates
+    appimage_name: "Nextcloud-Client.AppImage"
+    autostart_dir: "{{ ansible_env.HOME }}/config/autostart"
+
+  tasks:
+    # ---------------------------------------------------------
+    # 1. System Prerequisites (Requires sudo/become)
+    # ---------------------------------------------------------
+    - name: Install prerequisites for AppImage (libfuse2) and PPA management
+      become: true
+      ansible.builtin.apt:
+        name:
+          - software-properties-common
+          - libfuse2  # Critical for AppImages on Ubuntu 22.04+
+        state: present
+        update_cache: true
+
+    - name: Add AppImageLauncher PPA
+      become: true
+      ansible.builtin.apt_repository:
+        repo: 'ppa:appimagelauncher-team/stable'
+        state: present
+
+    - name: Install AppImageLauncher
+      become: true
+      ansible.builtin.apt:
+        name: appimagelauncher
+        state: present
+        update_cache: true
+
+    # ---------------------------------------------------------
+    # 2. User Space Setup (No sudo required)
+    # ---------------------------------------------------------
+    - name: Create Applications directory
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        mode: '0755'
+
+    # Query GitHub API to get the real download URL for the latest version
+    - name: Get latest Nextcloud Client release info
+      ansible.builtin.uri:
+        url: "https://api.github.com/repos/nextcloud/desktop/releases/latest"
+        return_content: true
+      register: nextcloud_release_info
+
+    - name: Parse download URL from release info
+      ansible.builtin.set_fact:
+        # Filters assets to find the one ending in 'x86_64.AppImage'
+        nextcloud_appimage_url: "{{ nextcloud_release_info.json.assets | selectattr('name', 'search', 'x86_64.AppImage$') | map(attribute='browser_download_url') | first }}"
+
+    - name: Download Nextcloud Client AppImage
+      ansible.builtin.get_url:
+        url: "{{ nextcloud_appimage_url }}"
+        dest: "{{ app_dir }}/{{ appimage_name }}"
+        mode: '0755'
+        # get_url will automatically check remote headers and update if the version changed
+        force: false 
+
+    - name: Ensure Autostart directory exists
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.config/autostart"
+        state: directory
+        mode: '0755'
+
+    - name: Create Nextcloud Autostart .desktop entry
+      ansible.builtin.copy:
+        dest: "{{ ansible_env.HOME }}/.config/autostart/nextcloud-client.desktop"
+        content: |
+          [Desktop Entry]
+          Type=Application
+          Name=Nextcloud
+          Comment=Nextcloud Desktop Client
+          # We point directly to the AppImage. AppImageLauncher will handle the execution context
+          Exec={{ app_dir }}/{{ appimage_name }} --background
+          Icon=nextcloud
+          Terminal=false
+          Categories=Network;FileTransfer;
+          StartupNotify=false
+          X-GNOME-Autostart-enabled=true
+        mode: '0644'
+
+  # ---------------------------------------------------------
+  # 3. Optional: Trigger Integration (Silent)
+  # ---------------------------------------------------------
+    - name: Integrate AppImage using AppImageLauncher CLI (Optional)
+      ansible.builtin.command: "ail-cli integrate {{ app_dir }}/{{ appimage_name }}"
+      register: integration_result
+      changed_when: "'Integrated' in integration_result.stdout"
+      failed_when: false
+
+
+- name: Install Tmux with TPM and Zsh environment
+  hosts: localhost
+  connection: local
+  become: true
+  vars:
+    user_home: "{{ ansible_env.HOME }}"
+    # Modern tmux prefers ~/.config/tmux/tmux.conf
+    tmux_config_dir: "{{ user_home }}/.config/tmux"
+    tpm_dir: "{{ user_home }}/.tmux/plugins/tpm"
+
+  tasks:
+    # ---------------------------------------------------------
+    # 1. Install System Packages
+    # ---------------------------------------------------------
+    - name: Install Tmux, Shell, and Utilities
+      ansible.builtin.apt:
+        name:
+          - tmux
+          - xdg-utils    # Provides xdg-open (Linux standard for 'open')
+        state: present
+        update_cache: true
+
+    # ---------------------------------------------------------
+    # 2. Compatibility Fixes (Linux 'open' command)
+    # ---------------------------------------------------------
+    - name: Check if 'open' command exists
+      ansible.builtin.command: which open
+      register: open_check
+      ignore_errors: true
+      changed_when: false
+
+    - name: Create 'open' symlink to 'xdg-open' for compatibility
+      # Your config uses 'xargs open', which is standard on macOS.
+      # On Linux, this links 'open' to 'xdg-open' so the bind works.
+      ansible.builtin.file:
+        src: /usr/bin/xdg-open
+        dest: /usr/local/bin/open
+        state: link
+      when: open_check.rc != 0
+
+    # ---------------------------------------------------------
+    # 3. Tmux Plugin Manager (TPM)
+    # ---------------------------------------------------------
+    - name: Install TPM (Tmux Plugin Manager)
+      become: false
+      ansible.builtin.git:
+        repo: '[https://github.com/tmux-plugins/tpm](https://github.com/tmux-plugins/tpm)'
+        dest: "{{ tpm_dir }}"
+        version: master
+        depth: 1
+
+    # ---------------------------------------------------------
+    # 4. Deploy Configuration
+    # ---------------------------------------------------------
+    - name: Ensure ~/.config/tmux directory exists
+      become: false
+      ansible.builtin.file:
+        path: "{{ tmux_config_dir }}"
+        state: directory
+        mode: '0755'
+
+    # ---------------------------------------------------------
+    # 5. Post-Install Instructions
+    # ---------------------------------------------------------
+    - name: Post-install message
+      ansible.builtin.debug:
+        msg:
+          - "Tmux configured successfully!"
+          - "To install plugins, start tmux and press 'Ctrl-Space' + 'I' (capital i)."

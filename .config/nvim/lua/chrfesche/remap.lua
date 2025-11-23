@@ -56,6 +56,7 @@ keymaps.undotree_toggle = "<leader>u"
 
 -- Telescope
 keymaps.telescope_find_files = "<C-t>"
+keymaps.telescope_resume_search = "<C-a>"
 keymaps.telescope_git_files = "<leader>pf"
 keymaps.telescope_grep_string = "<leader>ps"
 keymaps.telescope_find_depth_4 = "<C-p>"

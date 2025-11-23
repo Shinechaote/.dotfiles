@@ -56,6 +56,7 @@ return {
             })
         end
 
+        vim.keymap.set('n', keymaps.telescope_resume_search, builtin.resume, { desc = 'Telescope resume' })
         vim.keymap.set('n', keymaps.telescope_find_files, builtin.find_files, { desc = 'Telescope find files' })
         vim.keymap.set('n', keymaps.telescope_git_files, builtin.git_files, { desc = 'Git find files' })
         vim.keymap.set('n', keymaps.telescope_grep_string, function()
