@@ -2,6 +2,7 @@ vim.g.mapleader = " "
 
 -- File explorer
 vim.keymap.set("n", "<leader>w", vim.cmd.Ex)
+vim.keymap.set("n", "<leader>q", ":q<CR>")
 vim.keymap.set("n", "<leader>t", ":w<CR>")
 -- Paste without changing buffer
 vim.keymap.set("x", "<leader>p", [["_dP]])
@@ -63,3 +64,8 @@ keymaps.telescope_find_depth_4 = "<C-p>"
 
 -- Commenter
 keymaps.comment_toggle = "<leader>c"
+
+keymaps.flash_search = "m"
+keymaps.flash_treesitter = "L"
+keymaps.flash_treesitter_search = "S"
+keymaps.flash_toggle_search = "<c-s>"

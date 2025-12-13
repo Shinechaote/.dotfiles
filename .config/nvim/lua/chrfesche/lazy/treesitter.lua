@@ -1,5 +1,8 @@
 return {
     "nvim-treesitter/nvim-treesitter",
+    dependencies = {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+    },
     build = ":TSUpdate",
     config = function()
         require'nvim-treesitter.configs'.setup {
@@ -21,6 +24,19 @@ return {
                 -- Instead of true it can also be a list of languages
                 additional_vim_regex_highlighting = false,
             },
+            textobjects = {
+                select = {
+                    enable = true,
+                    lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+                    keymaps = {
+                        -- You can use the capture groups defined in textobjects.scm
+                        ["af"] = "@function.outer",
+                        ["if"] = "@function.inner",
+                        ["ac"] = "@class.outer",
+                        ["ic"] = "@class.inner",
+                    },
+                },
+            }
         }
     end
 }
