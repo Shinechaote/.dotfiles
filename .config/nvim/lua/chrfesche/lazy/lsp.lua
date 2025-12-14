@@ -52,7 +52,20 @@ return {
                 vim.keymap.set("n", keymaps.lsp_diagnostic_goto_previous, vim.diagnostic.goto_prev, opts)
                 vim.keymap.set("n", keymaps.lsp_buf_code_action, vim.lsp.buf.code_action, opts)
                 vim.keymap.set("n", keymaps.lsp_buf_references, vim.lsp.buf.references, opts)
-                vim.keymap.set("n", keymaps.lsp_buf_rename, vim.lsp.buf.rename, opts)
+                -- vim.keymap.set("n", keymaps.lsp_buf_rename, vim.lsp.buf.rename, opts)
+                vim.keymap.set("n", keymaps.lsp_buf_rename, function()
+                    -- 1. Save the current "word" definition
+                    local original_iskeyword = vim.bo.iskeyword
+
+                    -- 2. Temporarily add '_' to the definition so LSP grabs the full variable
+                    vim.bo.iskeyword = original_iskeyword .. ",_"
+
+                    -- 3. Trigger the rename (Neovim reads the word immediately here)
+                    vim.lsp.buf.rename()
+
+                    -- 4. Immediately restore the definition so 'e' and 'w' go back to normal
+                    vim.bo.iskeyword = original_iskeyword
+                end, opts)
                 vim.keymap.set("i", keymaps.lsp_buf_signature_help, vim.lsp.buf.signature_help, opts)
                 vim.keymap.set("n", keymaps.lsp_buf_signature_help, vim.lsp.buf.signature_help, opts)
                 vim.keymap.set("n", keymaps.lsp_format, function() 

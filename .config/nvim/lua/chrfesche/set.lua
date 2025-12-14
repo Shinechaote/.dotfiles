@@ -19,6 +19,8 @@ vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
 
+vim.opt.iskeyword:remove("_")
+
 vim.api.nvim_create_autocmd("VimEnter", {
     pattern = "*",
     callback = function()
