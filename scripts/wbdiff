@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+import wandb
+import yaml
+import sys
+import subprocess
+import tempfile
+from urllib.parse import urlparse
+
+# --- 1. Robust URL Parser ---
+def parse_wandb_id(url):
+    """
+    Extracts entity/project/run_id from a W&B URL.
+    Handles 'runs' in the path correctly without breaking project names.
+    """
+    path = urlparse(url).path  # e.g. /entity/project/runs/12345
+    parts = [p for p in path.split('/') if p]
+    
+    # Remove the 'runs' segment specifically used by W&B to denote the ID
+    # We iterate backwards to safely find the segment before the ID
+    if 'runs' in parts:
+        # Find the index of 'runs' relative to the run ID
+        # usually it is .../project/runs/run_id
+        try:
+            run_idx = parts.index('runs')
+            parts.pop(run_idx)
+        except ValueError:
+            pass
+            
+    return "/".join(parts)
+
+# --- 2. YAML Formatter ---
+def flow_style_list_representer(dumper, data):
+    return dumper.represent_sequence('tag:yaml.org,2002:seq', data, flow_style=True)
+
+yaml.add_representer(list, flow_style_list_representer)
+
+# --- 3. Main Logic ---
+def main():
+    runs = sys.argv[1:]
+
+    if not runs:
+        print("Usage: wandiff <url1> <url2> ...")
+        sys.exit(1)
+
+    wandb_api = wandb.Api()
+    temp_files = []
+
+    try:
+        print(f"Fetching {len(runs)} runs...")
+        
+        for url in runs:
+            run_id = parse_wandb_id(url)
+            print(f"Loading: {run_id}")
+            
+            try:
+                wandb_run = wandb_api.run(run_id)
+            except Exception as e:
+                print(f"Error fetching {run_id}: {e}")
+                sys.exit(1)
+
+            # Create temp file (delete=False is not strictly needed if we hold the file obj, 
+            # but NamedTemporaryFile behavior varies by OS. Keeping it open is safest.)
+            tf = tempfile.NamedTemporaryFile(mode="w+t", suffix=".yaml")
+            
+            # Dump config
+            yaml.dump(wandb_run.config, tf, sort_keys=False, default_flow_style=False)
+            
+            # Flush to ensure content is written to disk before nvim reads it
+            tf.flush()
+            temp_files.append(tf)
+
+        # Build the nvim command safely
+        file_names = [f.name for f in temp_files]
+        cmd = ["nvim", "-d"] + file_names
+        
+        # Open nvim (blocks until nvim is closed)
+        subprocess.call(cmd)
+
+    finally:
+        # cleanup
+        for f in temp_files:
+            f.close()
+
+if __name__ == "__main__":
+    main()
